@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { Fragment, useState } from 'react';
+import Header from './components/task/Header';
+import TaskList from './components/task/TaskList';
 
 function App() {
+  const [todos, setTodos] = useState([
+    { id: 1, taskName: 'task 1', isDone: false },
+    { id: 2, taskName: 'task 2', isDone: true },
+  ]);
+
+  const addTask = newTask => {
+    console.log(newTask);
+    setTodos(prev => [...prev, newTask]);
+  };
+
+  const deleteTask = id => {
+    console.log(id);
+    setTodos(prev => prev.filter(todo => todo.id !== id));
+  };
+
+  const completeTask = id =>
+    setTodos(prev =>
+      prev.map(todo =>
+        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+      )
+    );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      {/* Header Section */}
+      <Header addTask={addTask} />
+      {/* TaskList Section */}
+      <TaskList
+        todos={todos}
+        deleteTask={deleteTask}
+        completeTask={completeTask}
+      />
+    </Fragment>
   );
 }
 
